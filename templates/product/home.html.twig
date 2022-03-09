@@ -9,7 +9,7 @@
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for product in products %}
             <div class="col">
-                <a href="#">
+
                     <div class="card card-product">
                         <div class="card-img-top img-wrapper">
                             <img src="{{ asset('img/'~product.image) }}" alt="image de" {{ product.name }} class="{{ product.name }}">
@@ -18,10 +18,13 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ product.name }}</h5>
                             <p class="card-text">{{ product.price }}</p>
-                            <button class="btn">Ajout</button>
+                            <form class="quantity-choice">
+                                <input class="form-control" type="number" placeholder="1" name="quantity" aria-label="quantity">
+                                <a href="{{ path('panier_ajout', {product:product.id}) }}" type="submit"><span><i class="fa-solid fa-circle-plus"></i></span></a>
+                            </form>
+
                         </div>
                     </div>
-                </a>
             </div>
             {% endfor %}
         </div>

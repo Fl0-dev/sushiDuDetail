@@ -1,4 +1,17 @@
 .navbar {
   background-color: black;
   margin-bottom: 2rem;
+
+  .navbar-left {
+    display: flex;
+    align-items: center;
+
+    .bucket-svg {
+      display: flex;
+      margin-right: 1rem;
+      align-items: flex-end;
+      text-decoration: none;
+      color: #524e4e;
+    }
+  }
 }

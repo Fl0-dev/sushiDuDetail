@@ -9,6 +9,6 @@
 
 import 'bootstrap';
 import './styles/_custom.scss'
-
+import '@fortawesome/fontawesome-free/js/all.js';
 // start the Stimulus application
 //import './bootstrap';

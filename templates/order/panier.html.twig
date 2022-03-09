@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello OrderController!{% endblock %}
+
+{% block body %}
+
+    <section id="cart" class="">
+        <div class="container">
+            {% for product in products %}
+
+                <div class="card">
+                    <p>{{ product.name }}</p>
+                </div>
+
+            {% endfor %}
+        </div>
+    </section>
+
+{% endblock %}
