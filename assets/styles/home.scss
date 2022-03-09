@@ -44,15 +44,14 @@
             background-color: #524e4e;
             border-color: #524e4e;
           }
-          a {
-            span {
-              color: #524e4e;
+          button {
+            background-color: #524e4e;
+            color: black;
+            border-radius: 2rem;
 
-              &:hover,
-              &:focus {
-                color: #807e7e;
-              }
-
+            &:hover,
+            &:focus {
+              color: #807e7e;
             }
           }
         }

@@ -18,9 +18,14 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ product.name }}</h5>
                             <p class="card-text">{{ (product.price /100) | number_format(2)}}€</p>
-                            <form class="quantity-choice">
-                                <input class="form-control" type="number" placeholder="1" name="quantity" aria-label="quantity">
-                                <a href="{{ path('panier_ajout', {product:product.id}) }}" type="submit"><span><i class="fa-solid fa-circle-plus"></i></span></a>
+                            <form class="quantity-choice" action="{{ path('panier_ajout', {product:product.id}) }}">
+                                <input class="form-control input-quantity" type="number" value="{{ product.quantity }}" name="quantity" aria-label="quantity">
+                                {% if product.quantity != 0 %}
+                                    <button type="submit" data-id="{{ product.id }}" class="btn button">Modifier</button>
+                                {% else %}
+                                    <button type="submit" data-id="{{ product.id }}" class="btn button">Ajouter</button>
+                                    {% endif %}
+
                             </form>
 
                         </div>

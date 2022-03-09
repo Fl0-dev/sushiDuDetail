@@ -13,14 +13,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrderController extends AbstractController
 {
     #[Route('/panier/ajout/{product}', name: 'panier_ajout')]
-    public function AddProduct(Product $product, SessionInterface $session, Request $request): Response
+    public function updateProduct(Product $product, SessionInterface $session, Request $request): Response
     {
-
-        //$qty = $request->get("quantity",1);
+        //récupération de la quantité
+        $quantity = $request->query->get("quantity",1);
+        //récupération du panier
         $cart = $session->get('cart', []);
+        //récupération de l'ID du produit à ajouter
+        $id = $product->getId();
 
-        $cart[] = $product->getId();
-
+        $cart[$id] = $quantity;
         $session->set("cart", $cart);
 
         return $this->redirectToRoute('home');
@@ -30,17 +32,53 @@ class OrderController extends AbstractController
     public function panier(SessionInterface $session, ProductRepository $productRepository): Response
     {
         $cart = $session->get('cart');
+
         $allProducts = [];
         $totalPrice = 0;
-        foreach ($cart as $id){
+        $totalQuantity= 0;
+        foreach ($cart as $id =>$qty){
             $product = $productRepository->find($id);
-            $totalPrice += $product->getPrice();
+            $product->setQuantity($qty);
+            $totalPrice += $product->getPrice()*$qty;
+            $totalQuantity += $qty;
             $allProducts[] = $product;
         }
 
         return $this->render('order/panier.html.twig', [
             'products' => $allProducts,
             'totalPrice' => $totalPrice,
+            'totalQuantity' => $totalQuantity
         ]);
+    }
+
+    #[Route('/qtyPanier', name: 'qtyPanier')]
+    public function qtyPanier(SessionInterface $session): Response
+    {
+        $cart = $session->get('cart',[]);
+        $totalQuantity=0;
+
+        foreach ($cart as $id => $qty) {
+            $totalQuantity += $qty;
+        }
+        return new Response($totalQuantity);
+    }
+
+    #[Route('/panier/remove/{product}', name: 'panier_remove')]
+    public function removeProductOfCart(Product $product, SessionInterface $session): Response
+    {
+        //récupération du panier
+        $cart = $session->get('cart', []);
+        //récupération de l'ID du produit à ajouter
+        $idProduct = $product->getId();
+
+        if(array_key_exists($idProduct,$cart)) {
+            unset($cart[$idProduct]);
+        }
+
+        $session->set("cart", $cart);
+
+
+        return $this->redirectToRoute('panier');
+
     }
 }

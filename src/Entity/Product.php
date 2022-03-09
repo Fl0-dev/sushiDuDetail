@@ -34,6 +34,8 @@ class Product
     #[ORM\OneToMany(mappedBy: 'idProduct', targetEntity: ProductLine::class)]
     private $productLines;
 
+    private $quantity = 0;
+
     public function __construct()
     {
         $this->productLines = new ArrayCollection();
@@ -133,4 +135,22 @@ class Product
 
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getQuantity(): int
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * @param int $quantity
+     */
+    public function setQuantity(int $quantity): void
+    {
+        $this->quantity = $quantity;
+    }
+
+
 }

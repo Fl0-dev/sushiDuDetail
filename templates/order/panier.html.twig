@@ -20,10 +20,12 @@
                         </div>
                     </div>
                     <div class="right">
-                        <p>quantité : 1</p>
+                        <p>quantité : {{ product.quantity }}</p>
+                        <a href="{{ path('panier_remove', {product:product.id}) }}" class="btn delete-button">Supprimer</a>
                     </div>
                 </div>
-
+            {% else %}
+                <p>Le pannier est vide</p>
             {% endfor %}
         </div>
 
@@ -36,7 +38,7 @@
                     </div>
 
                     <div class="right">
-                        <h3>Quantité totale : ??</h3>
+                        <h3>Quantité totale : {{ totalQuantity }}</h3>
                     </div>
                 </div>
             </div>
