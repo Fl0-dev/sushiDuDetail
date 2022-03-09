@@ -1,0 +1,46 @@
+#home {
+  background-color: black;
+  .container {
+
+    margin-top: 5rem;
+
+    a {
+      color: grey;
+      text-decoration: none;
+
+      .card-product {
+        border-radius: 2rem;
+        background-color: black;
+        width: 17rem;
+        top: 0;
+        transition: all 0.3s ease;
+
+        &:hover {
+          top: -5px;
+          box-shadow: 0 4px 8px rgba(196, 196, 196, 0.25);
+        }
+
+        .img-wrapper {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+
+          > img {
+            width: 12rem;
+          }
+        }
+
+        .card-body {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          button {
+            background-color: #1e1e1e;
+            color: grey;
+          }
+        }
+      }
+    }
+  }
+}

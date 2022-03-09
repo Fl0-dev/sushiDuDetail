@@ -3,13 +3,29 @@
 {% block title %}Hello ProductController!{% endblock %}
 
 {% block body %}
-<section id="home-liste">
-    {% for product in products %}
-        <div class="card">
-            <h6 class="card-title">{{ product.name }}</h6>
-            <p>{{ product.price }}</p>
-        </div>
 
-    {% endfor %}
+<section id="home">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for product in products %}
+            <div class="col">
+                <a href="#">
+                    <div class="card card-product">
+                        <div class="card-img-top img-wrapper">
+                            <img src="{{ asset('img/'~product.image) }}" alt="image de" {{ product.name }} class="{{ product.name }}">
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.price }}</p>
+                            <button class="btn">Ajout</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </section>
+
 {% endblock %}
