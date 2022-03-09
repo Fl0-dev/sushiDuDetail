@@ -31,13 +31,16 @@ class OrderController extends AbstractController
     {
         $cart = $session->get('cart');
         $allProducts = [];
+        $totalPrice = 0;
         foreach ($cart as $id){
             $product = $productRepository->find($id);
+            $totalPrice += $product->getPrice();
             $allProducts[] = $product;
         }
 
         return $this->render('order/panier.html.twig', [
             'products' => $allProducts,
+            'totalPrice' => $totalPrice,
         ]);
     }
 }

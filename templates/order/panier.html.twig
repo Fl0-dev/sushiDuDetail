@@ -5,15 +5,42 @@
 {% block body %}
 
     <section id="cart" class="">
-        <div class="container">
+        <div class="container cart-content">
             {% for product in products %}
 
-                <div class="card">
-                    <p>{{ product.name }}</p>
+                <div class="card card-left">
+                    <div class="left">
+                        <div class="card-img-left img-wrapper">
+                            <img src="{{ asset('img/'~product.image) }}" alt="image de" {{ product.name }} class="{{ product.name }}">
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ (product.price /100) | number_format(2)}}€</p>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <p>quantité : 1</p>
+                    </div>
                 </div>
 
             {% endfor %}
         </div>
+
+        <div class="container cart-total">
+
+                <div class="card">
+                    <div class="left">
+                        <h3>Total</h3>
+                        <p>{{ (totalPrice /100) | number_format(2)}}€</p>
+                    </div>
+
+                    <div class="right">
+                        <h3>Quantité totale : ??</h3>
+                    </div>
+                </div>
+            </div>
+
     </section>
 
 {% endblock %}
