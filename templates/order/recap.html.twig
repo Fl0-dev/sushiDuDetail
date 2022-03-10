@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} | Récap{% endblock %}
+
+{% block body %}
+    <section id="recap" class="recap">
+        <div class="container">
+            <h4>Votre commande a bien été prise en compte</h4>
+            <p>Votre numéro de commande est : {{ order.id }}</p>
+            <p>Elle sera prête le {{ order.deliveryTime |format_datetime(locale='fr') }}</p>
+            <p>Le prix total de la commande est de {{ order.total  /100 | number_format(2)}}€</p>
+
+            <div class="card card-recap">
+                <h4>Recap de votre commande :</h4>
+                {% for productLine in order.productLines %}
+                        <div class="product">
+                            <div class="img-wrapper">
+                                <img src="{{ asset('img/'~productLine.idProduct.image) }}" alt="image de" {{ productLine.idProduct.name }} class="{{ productLine.idProduct.name }}">
+                            </div>
+
+                            <div class="info-product">
+                                <h5 class="card-title">{{ productLine.idProduct.name }}</h5>
+                                <p>quantité : {{ productLine.qtyProduct }}</p>
+                                <p>total : {{ productLine.total }}</p>
+                            </div>
+                        </div>
+                {% endfor %}
+            </div>
+            <div class="cat-wrapper">
+                <a href="{{ path('home') }}" class="btn button-retour">Page d'accueil</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

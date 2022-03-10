@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{parent()}} | panier{% endblock %}
+{% block title %}{{ parent()}} | panier{% endblock %}
 
 {% block body %}
 
@@ -21,7 +21,7 @@
                     </div>
                     <div class="right">
                         <p>quantité : {{ product.quantity }}</p>
-                        <a href="{{ path('panier_remove', {product:product.id}) }}" class="btn delete-button">Supprimer</a>
+                        <a href="{{ path('panier_remove', {product:product.id}) }}" class="btn delete-button" data-id="{{ product.id }}">Supprimer</a>
                     </div>
                 </div>
             {% else %}
@@ -43,7 +43,7 @@
 
                 <div class="right">
                     <h3>Quantité totale : {{ totalQuantity }}</h3>
-                    <a href="#" class="btn btn-validation">Valider panier</a>
+                    <a href="{{ path('panier_info') }}" class="btn btn-validation">Valider panier</a>
                 </div>
             </div>
         </div>

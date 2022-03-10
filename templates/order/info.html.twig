@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} | Info{% endblock %}
+
+{% block body %}
+    <section id="form-info">
+        <div class="form-content row">
+            <div class="col-5">
+                <h1>Infos</h1>
+                {{form_start(form)}}
+                {{ form_row(form.customerName) }}
+                {{ form_row(form.email) }}
+                {{ form_row(form.tel) }}
+                <div class="buttons-wrapper">
+                    <a href="{{ path('panier') }}" class="button-retour btn">Retour</a>
+                    <button class="button-validation btn">Valider</button>
+                </div>
+                {{form_end(form)}}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

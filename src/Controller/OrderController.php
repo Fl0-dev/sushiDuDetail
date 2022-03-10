@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Order;
 use App\Entity\Product;
+use App\Entity\ProductLine;
+use App\Form\OrderType;
 use App\Repository\ProductRepository;
+use DateInterval;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +37,7 @@ class OrderController extends AbstractController
     #[Route('/panier', name: 'panier')]
     public function panier(SessionInterface $session, ProductRepository $productRepository): Response
     {
-        $cart = $session->get('cart');
+        $cart = $session->get('cart',[]);
 
         $allProducts = [];
         $totalPrice = 0;
@@ -78,8 +83,64 @@ class OrderController extends AbstractController
 
         $session->set("cart", $cart);
 
-
         return $this->redirectToRoute('panier');
 
+    }
+
+    #[Route('/panier/info', name: 'panier_info')]
+    public function infos(Request $request,
+                          EntityManagerInterface $entityManager,
+                          SessionInterface $session,
+                          ProductRepository $productRepository): Response
+    {
+        $order = new Order();
+        $form = $this->createForm(OrderType::class, $order);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            //order
+            $date = new \DateTime();
+            $order->setCreatedAt($date);
+            $dateDelivery = clone $date;
+            $interval = (new DateInterval('PT1H'));
+            $dateDelivery->add($interval);
+            $order->setDeliveryTime($dateDelivery);
+            $order->setInProgress(false);
+            //mise en BDD
+            $entityManager->persist($order);
+
+
+            //récupération du panier
+            $cart = $session->get('cart', []);
+            $totalPrice = 0;
+
+            foreach ($cart as $id =>$qty) {
+                $product = $productRepository->find($id);
+                $productLine = new ProductLine();
+                $productLine->setIdProduct($product);
+                $productLine->setQtyProduct($qty);
+                $price = $qty*$product->getPrice();
+                $productLine->setTotal($price);
+                $totalPrice += $price;
+                $productLine->setCommandNumber($order);
+
+
+                $entityManager->persist($productLine);
+                $order->addProductLine($productLine);
+            }
+            $order->setTotal($totalPrice);
+            $entityManager->persist($order);
+            $entityManager->flush();
+            $session->set("cart",[]);
+
+            return $this->render('order/recap.html.twig', [
+                'order' => $order,
+            ]);
+        }
+
+        return $this->renderForm('order/info.html.twig', [
+            'form' => $form,
+        ]);
     }
 }
