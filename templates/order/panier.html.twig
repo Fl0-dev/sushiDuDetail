@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello OrderController!{% endblock %}
+{% block title %}{parent()}} | panier{% endblock %}
 
 {% block body %}
 
@@ -25,24 +25,29 @@
                     </div>
                 </div>
             {% else %}
-                <p>Le pannier est vide</p>
+                <div class="container">
+                    <p class="empty-cart">Le pannier est vide</p>
+                    <a href="{{ path('home') }}" class="btn btn-secondary">Voir carte</a>
+                </div>
             {% endfor %}
         </div>
 
+        {% if products is not empty %}
+
         <div class="container cart-total">
+            <div class="card">
+                <div class="left">
+                    <h3>Total</h3>
+                    <p>{{ (totalPrice /100) | number_format(2)}}€</p>
+                </div>
 
-                <div class="card">
-                    <div class="left">
-                        <h3>Total</h3>
-                        <p>{{ (totalPrice /100) | number_format(2)}}€</p>
-                    </div>
-
-                    <div class="right">
-                        <h3>Quantité totale : {{ totalQuantity }}</h3>
-                    </div>
+                <div class="right">
+                    <h3>Quantité totale : {{ totalQuantity }}</h3>
+                    <a href="#" class="btn btn-validation">Valider panier</a>
                 </div>
             </div>
-
+        </div>
+        {% endif %}
     </section>
 
 {% endblock %}

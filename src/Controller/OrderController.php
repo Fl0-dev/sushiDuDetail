@@ -22,10 +22,11 @@ class OrderController extends AbstractController
         //récupération de l'ID du produit à ajouter
         $id = $product->getId();
 
-        $cart[$id] = $quantity;
+        $cart[$id] = (int)$quantity;
         $session->set("cart", $cart);
-
-        return $this->redirectToRoute('home');
+        //récupérer la route d'où l'on vient
+        $previousUrl = $request->headers->get('referer');
+        return $this->redirectToRoute($previousUrl);
     }
 
     #[Route('/panier', name: 'panier')]

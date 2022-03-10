@@ -1,5 +1,7 @@
 #cart {
   background-color: black;
+  padding-top: 2rem;
+  padding-bottom: 10rem;
 
   .cart-content {
     margin-top: 3rem;
@@ -28,6 +30,10 @@
         }
       }
     }
+
+    .empty-cart {
+      margin-top: 4rem;
+    }
   }
 
   .cart-total {
@@ -47,6 +53,20 @@
       }
 
       .right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        .btn-validation {
+          background-color: #524e4e;
+          color: black;
+          border-radius: 2rem;
+
+          &:hover,
+          &:focus {
+            color: #807e7e;
+          }
+        }
       }
     }
   }
