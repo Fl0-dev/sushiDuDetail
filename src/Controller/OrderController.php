@@ -125,7 +125,6 @@ class OrderController extends AbstractController
                 $totalPrice += $price;
                 $productLine->setCommandNumber($order);
 
-
                 $entityManager->persist($productLine);
                 $order->addProductLine($productLine);
             }
@@ -134,13 +133,66 @@ class OrderController extends AbstractController
             $entityManager->flush();
             $session->set("cart",[]);
 
-            return $this->render('order/recap.html.twig', [
-                'order' => $order,
-            ]);
+            return $this->redirectToRoute('recap', ['id' => $order->getId()]);
+
         }
 
         return $this->renderForm('order/info.html.twig', [
             'form' => $form,
         ]);
+    }
+
+    #[Route('/panier/recap/{id}', name: 'recap')]
+    public function recap(Order $order): Response
+    {
+        return $this->render('order/recap.html.twig', [
+            'order' => $order,
+        ]);
+    }
+
+    #[Route('/panier/paiement', name: 'paiement')]
+    public function redirectStripe(): Response
+    {
+        \Stripe\Stripe::setApiKey('sk_test_51Kc4NfIH1eZO47FF7kFbnj6AGBg25Re20NIfWtWcR0Li2ND8ZEScLMU2SkkclW5fLtC3pxqoLeqbQvpbIl9dWBa600Xbd3QWCB');
+        $session = \Stripe\Checkout\Session::create([
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => 'T-shirt',
+                    ],
+                    'unit_amount' => 2000,
+                ],
+                'quantity' => 1,
+            ],
+                [
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => [
+                            'name' => 'Confiture',
+                        ],
+                        'unit_amount' => 3000,
+                    ],
+                    'quantity' => 2,
+                ]],
+            'mode' => 'payment',
+            'success_url' => 'http://localhost:8000/panier/success',
+            'cancel_url' => 'http://localhost:8000/panier/error'
+        ]);
+
+        return $this->redirect($session->url,303);
+    }
+
+    #[Route('/panier/success', name: 'success')]
+    public function success(): Response
+    {
+        return $this->render('order/success.html.twig');
+
+    }
+
+    #[Route('/panier/error', name: 'error')]
+    public function error(): Response
+    {
+        return $this->redirectToRoute('home');
     }
 }

@@ -42,11 +42,9 @@
                         </ul>
                     </li>
                 </ul>
-                <form class="navbar-left">
+                <div class="navbar-left">
                     <a href="{{ path('panier') }}" class="bucket-svg"><img src="{{ asset('img/shopping-basket.svg') }}" width="40px" alt="pannier"><span class="span-quantity">{{ render(path('qtyPanier')) }}</span></a>
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-secondary" type="submit">Search</button>
-                </form>
+                </div>
             </div>
         </div>
     </nav>
