@@ -8,9 +8,26 @@
     <div class="container">
 
         <div class="search">
-            <form>
-
-            </form>
+            {{ form_start(form, {'action': path('home'), 'method': 'POST'}) }}
+            <div class="row">
+{#                <div class="col-12">#}
+{#                    {{ form_row(form.text) }}#}
+{#                </div>#}
+                <div class="col-12">
+                    {{ form_row(form.categories) }}
+                </div>
+                <div class="col-12">
+                    {{ form_row(form.min) }}
+                </div>
+                <div class="col-12">
+                    {{ form_row(form.max) }}
+                </div>
+                <div class="col-12">
+                    {{ form_row(form.order) }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-search">Recherche</button>
+            {{ form_end(form) }}
         </div>
 
         <div class="row row-cols-1 row-cols-md-3 g-4">

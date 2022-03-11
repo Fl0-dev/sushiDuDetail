@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Entity\SearchData;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -67,10 +68,66 @@ class ProductRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->setParameter('val',$text = $data->getText(); $value)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        ->getOneOrNullResult()
+    ;
     }
-    */
+
+    public function findByCategory($categories)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->join('p.category', 'c');
+        foreach ($categories as $key => $category) {
+            $qb->orWhere('c.name = :category' . $key)
+               ->setParameter('category' . $key, $category);
+        }
+        return $qb->getQuery()
+                  ->getResult();
+    }
+
+*/
+    public function findBySearch(SearchData $data)
+    {
+        $text =
+        $categories = $data->getCategories();
+        $min = $data->getMin();
+        $max = $data->getMax();
+        $order = $data->getOrder();
+        //dd($min);
+        $qb =$this->createQueryBuilder('p');
+
+//        if(!empty($text)) {
+//            $qb->andWhere('p.name LIKE :text')
+//               ->setParameter('text','%'.$text.'%');
+//        }
+        if($categories != null && !empty($categories)) {
+            foreach ($categories as $key => $category) {
+                $qb->orWhere('p.category = :category' . $key)
+                    ->setParameter('category' . $key, $category->getId());
+            }
+        }
+        if($min != null) {
+            $qb->andWhere('p.price > :min')
+                ->setParameter('min', $min);
+        }
+        if($max != null) {
+            $qb->andWhere('p.price <= :max')
+                ->setParameter('max', $max);
+        }
+        if($order == 0) {
+            $qb->orderBy('p.name','DESC');
+        } elseif ($order == 1) {
+            $qb->orderBy('p.name','ASC');
+        } elseif ($order == 2) {
+            $qb->orderBy('p.price','ASC');
+        } elseif ($order == 3) {
+            $qb->orderBy('p.price', 'DESC');
+        }
+
+        //dd($qb->getQuery());
+
+        $query = $qb->getQuery();
+        return $query->execute();
+    }
 }
