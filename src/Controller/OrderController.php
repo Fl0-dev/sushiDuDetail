@@ -131,7 +131,6 @@ class OrderController extends AbstractController
             $order->setTotal($totalPrice);
             $entityManager->persist($order);
             $entityManager->flush();
-            $session->set("cart",[]);
 
             return $this->redirectToRoute('recap', ['id' => $order->getId()]);
 
@@ -151,30 +150,28 @@ class OrderController extends AbstractController
     }
 
     #[Route('/panier/paiement', name: 'paiement')]
-    public function redirectStripe(): Response
+    public function redirectStripe(SessionInterface $sessionActive, ProductRepository $productRepository): Response
     {
-        \Stripe\Stripe::setApiKey('sk_test_51Kc4NfIH1eZO47FF7kFbnj6AGBg25Re20NIfWtWcR0Li2ND8ZEScLMU2SkkclW5fLtC3pxqoLeqbQvpbIl9dWBa600Xbd3QWCB');
-        $session = \Stripe\Checkout\Session::create([
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'eur',
-                    'product_data' => [
-                        'name' => 'T-shirt',
-                    ],
-                    'unit_amount' => 2000,
-                ],
-                'quantity' => 1,
-            ],
-                [
+        $cart = $sessionActive->get('cart', []);
+        $stripeOrder= [];
+        foreach ($cart as $id =>$qty) {
+            $product = $productRepository->find($id);
+            $stripeOrder[] = [
                     'price_data' => [
                         'currency' => 'eur',
                         'product_data' => [
-                            'name' => 'Confiture',
+                            'name' => $product->getName(),
                         ],
-                        'unit_amount' => 3000,
+                        'unit_amount' => $product->getPrice(),
                     ],
-                    'quantity' => 2,
-                ]],
+                    'quantity' => $qty,
+            ];
+        }
+
+
+        \Stripe\Stripe::setApiKey('sk_test_51Kc4NfIH1eZO47FF7kFbnj6AGBg25Re20NIfWtWcR0Li2ND8ZEScLMU2SkkclW5fLtC3pxqoLeqbQvpbIl9dWBa600Xbd3QWCB');
+        $session = \Stripe\Checkout\Session::create([
+            'line_items' => [$stripeOrder],
             'mode' => 'payment',
             'success_url' => 'http://localhost:8000/panier/success',
             'cancel_url' => 'http://localhost:8000/panier/error'
@@ -184,8 +181,9 @@ class OrderController extends AbstractController
     }
 
     #[Route('/panier/success', name: 'success')]
-    public function success(): Response
+    public function success(SessionInterface $session): Response
     {
+        $session->set("cart",[]);
         return $this->render('order/success.html.twig');
 
     }
