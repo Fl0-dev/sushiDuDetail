@@ -149,9 +149,13 @@ class OrderController extends AbstractController
         ]);
     }
 
-    #[Route('/panier/paiement', name: 'paiement')]
-    public function redirectStripe(SessionInterface $sessionActive, ProductRepository $productRepository): Response
+    #[Route('/panier/paiement/{order}', name: 'paiement')]
+    public function redirectStripe(Order $order,SessionInterface $sessionActive, ProductRepository $productRepository): Response
     {
+        //création d'un token pour la validation
+        $token=bin2hex(random_bytes(10));
+        $sessionActive->set("token_payment",$token);
+
         $cart = $sessionActive->get('cart', []);
         $stripeOrder= [];
         foreach ($cart as $id =>$qty) {
@@ -168,23 +172,33 @@ class OrderController extends AbstractController
             ];
         }
 
-
         \Stripe\Stripe::setApiKey('sk_test_51Kc4NfIH1eZO47FF7kFbnj6AGBg25Re20NIfWtWcR0Li2ND8ZEScLMU2SkkclW5fLtC3pxqoLeqbQvpbIl9dWBa600Xbd3QWCB');
         $session = \Stripe\Checkout\Session::create([
             'line_items' => [$stripeOrder],
             'mode' => 'payment',
-            'success_url' => 'http://localhost:8000/panier/success',
-            'cancel_url' => 'http://localhost:8000/panier/error'
+            'success_url' => 'http://127.0.0.1:8000/panier/success/'.$order->getId().'/'.$token,
+            'cancel_url' => 'http://127.0.0.1:8000/panier/error'
         ]);
 
         return $this->redirect($session->url,303);
     }
 
-    #[Route('/panier/success', name: 'success')]
-    public function success(SessionInterface $session): Response
+    #[Route('/panier/success/{order}/{token}', name: 'success')]
+    public function success(Order $order, string $token, SessionInterface $session, EntityManagerInterface $entityManager): Response
     {
-        $session->set("cart",[]);
-        return $this->render('order/success.html.twig');
+        //vérification du token
+        $tokenSession = $session->get('token_payment');
+
+        if($token == $tokenSession) {
+
+            $order->setInProgress(1);
+            $entityManager->flush();
+
+            $session->set("cart",[]);
+            return $this->render('order/success.html.twig');
+        }
+
+        return $this->redirectToRoute('error');
 
     }
 

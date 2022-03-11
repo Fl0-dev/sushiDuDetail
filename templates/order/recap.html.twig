@@ -9,7 +9,7 @@
             <p>Votre numéro de commande est : {{ order.id }}</p>
             <p>Elle sera prête le {{ order.deliveryTime |format_datetime(locale='fr') }}</p>
             <p>Le prix total de la commande est de {{ order.total  /100 | number_format(2)}}€</p>
-            <a href="{{ path('paiement') }}" class="btn btn-paiement" target="_blank">Payer de suite</a>
+            <a href="{{ path('paiement', {order:order.id}) }}" class="btn btn-paiement" target="_blank">Payer de suite</a>
 
             <div class="card card-recap">
                 <h4>Recap de votre commande :</h4>
