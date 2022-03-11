@@ -8,13 +8,24 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 3rem;
+
+    .img-wrapper {
+      margin:1rem;
+      width: 20rem;
+      border-radius: 25rem;
+      overflow: hidden;
+
+      .img-licorne {
+        width: 20rem;
+      }
+    }
 
     .button-retour {
       background-color: black;
       border-color: #524e4e;
       color: #524e4e;
       border-radius: 2rem;
-      margin-right: 2rem;
 
       &:hover,
       &:focus {

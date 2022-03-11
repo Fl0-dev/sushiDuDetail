@@ -4,43 +4,47 @@
   padding-top: 7rem;
   padding-bottom: 30rem;
 
-  .btn-paiement {
-    background-color: #524e4e;
-    color: black;
-    border-radius: 1rem;
+  .container {
+    margin-top: 5rem;
 
-    &:hover,
-    &:focus {
-      color: #807e7e;
+    .btn-paiement {
+      background-color: #524e4e;
+      color: black;
+      border-radius: 1rem;
+
+      &:hover,
+      &:focus {
+        color: #807e7e;
+      }
     }
-  }
 
-  .card-recap {
-    background-color: black;
-    color: grey;
+    .card-recap {
+      background-color: black;
+      color: grey;
 
-    .product {
-      display: flex;
-      align-items: center;
+      .product {
+        display: flex;
+        align-items: center;
 
-      .img-wrapper {
-        > img {
-          width: 12rem;
+        .img-wrapper {
+          > img {
+            width: 12rem;
+          }
         }
       }
     }
-  }
 
-  .button-retour {
-    background-color: black;
-    border-color: #524e4e;
-    color: #524e4e;
-    border-radius: 2rem;
-    margin-right: 2rem;
+    .button-retour {
+      background-color: black;
+      border-color: #524e4e;
+      color: #524e4e;
+      border-radius: 2rem;
+      margin-right: 2rem;
 
-    &:hover,
-    &:focus {
-      color: #807e7e;
+      &:hover,
+      &:focus {
+        color: #807e7e;
+      }
     }
   }
 }
